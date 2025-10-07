@@ -119,3 +119,8 @@ feature/<기능이름>: 개별 기능 개발을 위한 브랜치이며, develop�
 프로젝트의 커밋 메시지는 Conventional Commits 규칙을 따르는 것을 권장합니다.
 
 예시: feat(backend): 워런 버핏 투자 전략 분석 API 추가
+
+# 개발용 Airflow Helm-Chart 명령어
+helm upgrade --install airflow-prod apache-airflow/airflow \
+  --namespace airflow-dev \
+  -f /DATA/app/infra/kubernetes/airflow/values-dev.yaml
