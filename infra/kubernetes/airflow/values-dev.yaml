@@ -2816,6 +2816,10 @@ cleanup:
 # Not recommended for production
 postgresql:
   enabled: true
+  image:
+    registry: docker.io
+    repository: postgres
+    tag: "16.6"
   auth:
     enablePostgresUser: true
     postgresPassword: postgres
