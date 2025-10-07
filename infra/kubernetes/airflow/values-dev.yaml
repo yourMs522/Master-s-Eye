@@ -766,7 +766,7 @@ workers:
   # Persistence volume configuration for Airflow Celery workers
   persistence:
     # Enable persistent volumes
-    enabled: true
+    enabled: false
 
     # This policy determines whether PVCs should be deleted when StatefulSet is scaled down or removed
     persistentVolumeClaimRetentionPolicy: ~
