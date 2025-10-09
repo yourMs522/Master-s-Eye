@@ -2816,6 +2816,10 @@ cleanup:
 # Not recommended for production
 postgresql:
   enabled: true
+  images:
+    # Override the PostgreSQL image (can be a private image)
+    repository: "postgres"
+    tag: "17.3"
   auth:
     enablePostgresUser: true
     postgresPassword: postgres
