@@ -2816,6 +2816,12 @@ cleanup:
 # Not recommended for production
 postgresql:
   enabled: true
+  images:
+    # Override the PostgreSQL image (if not set, the default image for the version is used)
+    repository: postgres
+    tag: "17.3"
+    pullPolicy: IfNotPresent
+    pullSecrets: []
   auth:
     enablePostgresUser: true
     postgresPassword: postgres
