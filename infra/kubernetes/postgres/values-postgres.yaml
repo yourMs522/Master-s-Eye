@@ -16,9 +16,7 @@ global:
 ## Image Configuration
 image:
   registry: docker.io
-  repository: bitnami/postgresql
-  tag: "17.3.0-debian-12-r0"  # PostgreSQL 17.3
-  pullPolicy: IfNotPresent
+  repository: bitnami/postgresqlß
   debug: false
 
 ## PostgreSQL Configuration
@@ -44,7 +42,7 @@ primary:
       memory: "512Mi"
       cpu: "250m"
     limits:
-      memory: "1024Mi"
+      memory: "1024Mi"  
       cpu: "500m"
 
   # Persistence
@@ -154,6 +152,13 @@ volumePermissions:
     repository: bitnami/os-shell
     tag: 12-debian-12-r31
     pullPolicy: IfNotPresent
+
+## PostgreSQL Configuration Parameters
+postgresqlConfiguration:
+  listen_addresses: '*'
+  port: 5432
+  max_connections: 100
+  shared_buffers: 128MB
 
 ## Backup Configuration (Optional)
 # backup:
