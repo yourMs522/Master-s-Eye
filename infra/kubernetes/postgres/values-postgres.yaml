@@ -1,0 +1,198 @@
+# PostgreSQL Development Environment Configuration
+# Based on Bitnami PostgreSQL Helm Chart
+# https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+
+## Global Configuration
+global:
+  postgresql:
+    auth:
+      # WARNING: Change these credentials in production
+      username: postgres
+      password: postgres_dev_password
+      database: masters_eye_dev
+      existingSecret: ""  # Use Kubernetes secret in production
+  storageClass: ""  # Use default storage class
+
+## Image Configuration
+image:
+  registry: docker.io
+  repository: bitnami/postgresql
+  tag: "17.3.0-debian-12-r0"  # PostgreSQL 17.3
+  pullPolicy: IfNotPresent
+  debug: false
+
+## PostgreSQL Configuration
+auth:
+  enablePostgresUser: true
+  postgresPassword: minsang1234
+  username: minsang
+  password: minsang1234
+  database: masters_eye_dev
+  # Use existing secret (recommended for production)
+  # existingSecret: "postgresql-secret"
+  # secretKeys:
+  #   adminPasswordKey: postgres-password
+  #   userPasswordKey: password
+
+## Primary Configuration
+primary:
+  name: primary
+
+  # Resource Limits (Development)
+  resources:
+    requests:
+      memory: 1024Mi"
+      cpu: "250m"
+    limits:
+      memory: "2058Mi"
+      cpu: "500m"
+
+  # Persistence
+  persistence:
+    enabled: true
+    storageClass: ""  # Use default
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+
+  # PostgreSQL Configuration
+  extendedConfiguration: |
+    max_connections = 100
+    shared_buffers = 128MB
+    effective_cache_size = 512MB
+    maintenance_work_mem = 64MB
+    checkpoint_completion_target = 0.9
+    wal_buffers = 4MB
+    default_statistics_target = 100
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    work_mem = 2621kB
+    min_wal_size = 1GB
+    max_wal_size = 4GB
+
+    # Logging
+    log_timezone = 'UTC'
+    log_connections = on
+    log_disconnections = on
+    log_duration = off
+    log_statement = 'none'
+
+  # Init DB Scripts (optional)
+  initdb:
+    scripts:
+      # Create additional databases or extensions
+      # init.sql: |
+      #   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      #   CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+
+  # Service Configuration
+  service:
+    type: ClusterIP
+    ports:
+      postgresql: 5432
+    nodePorts:
+      postgresql: ""
+    clusterIP: ""
+    annotations: {}
+
+  # Pod Configuration
+  podAnnotations: {}
+  podLabels: {}
+
+  # Liveness Probe
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  # Readiness Probe
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+## Read Replicas Configuration (Disabled for Dev)
+readReplicas:
+  replicaCount: 0
+
+## Metrics Configuration
+metrics:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/postgres-exporter
+    tag: 0.15.0-debian-12-r29
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "100m"
+
+  # Prometheus ServiceMonitor
+  serviceMonitor:
+    enabled: false  # Enable if using Prometheus Operator
+    namespace: ""
+    interval: 30s
+    scrapeTimeout: 10s
+
+## Volume Permissions
+volumePermissions:
+  enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/os-shell
+    tag: 12-debian-12-r31
+    pullPolicy: IfNotPresent
+
+## PostgreSQL Configuration Parameters
+postgresqlConfiguration:
+  listen_addresses: '*'
+  port: 5432
+  max_connections: 100
+  shared_buffers: 128MB
+
+## Backup Configuration (Optional)
+# backup:
+#   enabled: false
+#   cronjob:
+#     schedule: "0 2 * * *"  # Daily at 2 AM
+#     storage: 10Gi
+
+## Network Policy (Optional)
+networkPolicy:
+  enabled: false
+  # allowExternal: true
+  # ingressRules:
+  #   primaryAccessOnlyFrom:
+  #     enabled: false
+  #     namespaceSelector: {}
+  #     podSelector: {}
+
+## Pod Security Context
+primarySecurityContext:
+  enabled: true
+  fsGroup: 1001
+
+## Container Security Context
+primaryContainerSecurityContext:
+  enabled: true
+  runAsUser: 1001
+  runAsNonRoot: true
+
+## Service Account
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+  annotations: {}
