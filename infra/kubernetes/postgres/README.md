@@ -31,7 +31,7 @@ kubectl create namespace postgres-airflow
 
 # PostgreSQL 배포
 helm install postgresql bitnami/postgresql \
-  -f infra/kubernetes/postgres/values-postgres.yaml \
+  -f /DATA/app/infra/kubernetes/postgres/values-postgres.yaml \
   -n postgres-airflow
 
 # 또는 기본 namespace에 배포
