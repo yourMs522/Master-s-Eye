@@ -74,6 +74,8 @@ services:
     <<: *airflow-common
     container_name: airflow-webserver
     command: webserver
+    volumes:
+      - /DATA/airflow/dags:/opt/airflow/dags
     ports:
       - "8080:8080"
     healthcheck:
